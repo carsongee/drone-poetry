@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+
+""" 
+Converts Drone plugin parameters to poetry commands and supports
+some specialized CI tasks such as publishing to a specific
+repository.
+"""
+import argparse
+import json
+import subprocess
+import sys
+import typing as t
+import uuid
+from os import environ as env
+
+
+def parse_args(args: t.Iterable):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "-d",
+        "--dry-run",
+        action="store_true",
+        default=env.get("PLUGIN_DRY_RUN") == "true",
+        help="Do not actually run commands, just print them",
+    )
+    parser.add_argument(
+        "--command",
+        default=env.get("PLUGIN_COMMAND"),
+        help="The poetry command to run.",
+    )
+    parser.add_argument(
+        "--commands",
+        default=env.get("PLUGIN_COMMANDS"),
+        help="A comma separated list of commands to run.",
+    )
+    parser.add_argument(
+        "--publish",
+        default=env.get("PLUGIN_PUBLISH"),
+        help="JSON formatted dict with optional arguments `username`, `password`, `repository`, and `repository_url`.",
+    )
+    return parser.parse_args()
+
+
+def run_poetry_command(*, command: str, dry_run: bool) -> None:
+    """Executes the specified string with `poetry`."""
+    if dry_run:
+        print(f"poetry -n {command}")
+        return
+    subprocess.run(f"poetry -n {command}", check=True, shell=True)
+
+
+def publish(
+    *,
+    username: t.Optional[str] = None,
+    password: t.Optional[str] = None,
+    repository: t.Optional[str] = None,
+    repository_url: t.Optional[str] = None,
+    dry_run: bool,
+) -> None:
+    generated_repository = False
+
+    if not repository and repository_url:
+        repository = str(uuid.uuid4())
+        generated_repository = True
+
+    if repository_url:
+        run_poetry_command(
+            command=f"config 'repositories.{repository}' '{repository_url}'",
+            dry_run=dry_run,
+        )
+
+    u = f" -u '{username}'" if username else ""
+    p = f" -p '{password}'" if password else ""
+    run_poetry_command(
+        command=f"publish --build -r '{repository}'{u}{p}", dry_run=dry_run
+    )
+
+    if generated_repository:
+        run_poetry_command(
+            command=f"config 'repositories.{repository}' --unset", dry_run=dry_run
+        )
+    return
+
+
+def main(args) -> None:
+    if args.dry_run:
+        print("Dry Run Active. All following output would normally execute:")
+
+    if args.command:
+        run_poetry_command(command=args.command, dry_run=args.dry_run)
+    if args.commands:
+        for command in args.commands.split(","):
+            run_poetry_command(command=command, dry_run=args.dry_run)
+    if args.publish:
+        publish_args = json.loads(args.publish)
+        publish(**publish_args, dry_run=args.dry_run)
+
+
+if __name__ == "__main__":
+    args = parse_args(sys.argv[1:])    
+    main(args)
