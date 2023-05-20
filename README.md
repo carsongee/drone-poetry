@@ -29,7 +29,7 @@ steps:
   image: carsongee/drone-poetry
   settings:
     commands:
-      - add click
+      - check
       - build
       - publish
 ```
