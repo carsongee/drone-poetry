@@ -55,10 +55,10 @@ or used a name repository within your poetry config
 steps:
   - name: poetry
     image: carsongee/drone-poetry
-   settings:
-     publish:
-       username: jan
-       password: secret
+    settings:
+      publish:
+        username: jan
+        password: secret
 -       repository_url: https://my-private-pypi.example.com/pypi
 +       repository: my-private
 ```
