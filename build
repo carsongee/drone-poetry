@@ -4,6 +4,8 @@
 docker buildx build \
   --label org.label-schema.build-date=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
   --label org.label-schema.vcs-ref=$(git rev-parse --short HEAD) \
-  --tag carsongee/drone-poetry .
+  --tag carsongee/drone-poetry \
+  --tag carsongee/drone-poetry:$(git rev-parse --abbrev-ref HEAD) \
+  .
 
 
