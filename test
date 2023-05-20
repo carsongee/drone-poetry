@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+cd testdata/example
+
+docker run --rm \
+  -e PLUGIN_COMMAND=check \
+  -e PLUGIN_COMMANDS='build,config --list' \
+  -e PLUGIN_PUBLISH='{"username": "jan", "password": "secret", "repository_url": "https://example.com/pypi"}' \
+  -v $(pwd):$(pwd) \
+  -w $(pwd) \
+  -it --entrypoint sh\
+  carsongee/drone-poetry

@@ -43,10 +43,10 @@ def parse_args(args: t.Iterable):
 
 def run_poetry_command(*, command: str, dry_run: bool) -> None:
     """Executes the specified string with `poetry`."""
+    print(f"poetry -v -n {command}")
     if dry_run:
-        print(f"poetry -n {command}")
         return
-    subprocess.run(f"poetry -n {command}", check=True, shell=True)
+    subprocess.run(f"poetry -v -n {command}", check=True, shell=True)
 
 
 def publish(
@@ -57,11 +57,10 @@ def publish(
     repository_url: t.Optional[str] = None,
     dry_run: bool,
 ) -> None:
-    generated_repository = False
+    """Run a series of commands to publish the package"""
 
     if not repository and repository_url:
         repository = str(uuid.uuid4())
-        generated_repository = True
 
     if repository_url:
         run_poetry_command(
@@ -74,12 +73,6 @@ def publish(
     run_poetry_command(
         command=f"publish --build -r '{repository}'{u}{p}", dry_run=dry_run
     )
-
-    if generated_repository:
-        run_poetry_command(
-            command=f"config 'repositories.{repository}' --unset", dry_run=dry_run
-        )
-    return
 
 
 def main(args) -> None:
