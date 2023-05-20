@@ -105,3 +105,14 @@ docker run --rm \
   -w $(pwd) \
   carsongee/drone-poetry
 ```
+
+## Docker Build
+
+```
+docker buildx build \
+  --platform linux/amd64,linux/arm64,linux/arm/v7 \
+  --label org.label-schema.build-date=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+  --label org.label-schema.vcs-ref=$(git rev-parse --short HEAD) \
+  --tag carsongee/drone-poetry \
+  .
+```
