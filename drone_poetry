@@ -43,7 +43,7 @@ def parse_args(args: t.Iterable):
 
 def run_poetry_command(*, command: str, dry_run: bool) -> None:
     """Executes the specified string with `poetry`."""
-    print(f"poetry -v -n {command}")
+    print(f"> poetry -v -n {command}")
     if dry_run:
         return
     subprocess.run(f"poetry -v -n {command}", check=True, shell=True)

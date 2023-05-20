@@ -8,5 +8,4 @@ docker run --rm \
   -e PLUGIN_PUBLISH='{"username": "jan", "password": "secret", "repository_url": "https://example.com/pypi"}' \
   -v $(pwd):$(pwd) \
   -w $(pwd) \
-  -it --entrypoint sh\
   carsongee/drone-poetry
