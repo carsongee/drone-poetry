@@ -29,7 +29,7 @@ steps:
   image: carsongee/drone-poetry
   settings:
     commands:
-      - add click
+      - check
       - build
       - publish
 ```
@@ -53,14 +53,14 @@ or used a name repository within your poetry config
 
 ```diff
 steps:
-- name: poetry
-  image: carsongee/drone-poetry
-  settings:
-    publish:
-      username: jan
-      password: secret
--      repository_url: https://my-private-pypi.example.com/pypi
-+      repository: my-private
+  - name: poetry
+    image: carsongee/drone-poetry
+    settings:
+      publish:
+        username: jan
+        password: secret
+-       repository_url: https://my-private-pypi.example.com/pypi
++       repository: my-private
 ```
 
 These options are _not_ mutually exclusive. The plugin will run all
