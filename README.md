@@ -1,6 +1,6 @@
 # drone-poetry
 
-Drone plugin for running poetry commands on CI.
+Drone plugin for running [python-poetry](https://python-poetry.org) commands on CI.
 
 This plugin attempts to enable you to run arbitrary poetry commands
 within a container that has recent versions of poetry and Python
@@ -79,11 +79,17 @@ commands
 publish
 : If set, runs `poetry publish --build...` and allows you to configure
 a specific repo and credentials. Takes three optional arguments:
+  * username
+  : Username for the repo to publish
 
-username: Username for the repo to publish
-password: password to the repo to publish
-repository: Named poetry repository to publish
-repository_url: Direct URL to the repository to publish. It will create and
+  * password
+  : password to the repo to publish
+
+  * repository
+  : Named poetry repository to publish
+
+  * repository_url
+  : Direct URL to the repository to publish. It will create and
   delete a temp named repo in your poetry config.
 
 
