@@ -15,6 +15,7 @@ docker buildx build \
   --tag carsongee/drone-poetry:$(git rev-parse --abbrev-ref HEAD) \
   --tag carsongee/drone-poetry:v0.2.0 \
   --tag carsongee/drone-poetry:stable \
+  --tag carsongee/drone-poetry:3.13 \
   --push \
   .
 
