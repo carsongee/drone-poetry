@@ -1,4 +1,6 @@
-FROM python
+ARG PYTHON_VERSION=3.13
+
+FROM python:${PYTHON_VERSION}-slim
 
 LABEL maintainer="Carson Gee <x@carsongee.com>" \
   org.label-schema.name="Drone Poetry" \

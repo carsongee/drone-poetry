@@ -1,13 +1,30 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
+python_versions=(
+    "3.10"
+    "3.11"
+    "3.12"
+#    "3.13"
+)
 
 docker buildx build \
-  --platform linux/amd64,linux/arm64,linux/arm/v7 \
+  --platform linux/amd64,linux/arm64 \
   --label org.label-schema.build-date=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
   --label org.label-schema.vcs-ref=$(git rev-parse --short HEAD) \
-#  --push \
   --tag carsongee/drone-poetry \
   --tag carsongee/drone-poetry:$(git rev-parse --abbrev-ref HEAD) \
-#  --tag carsongee/drone-poetry:v0.1.0 \
-#  --tag carsongee/drone-poetry:stable \
+  --tag carsongee/drone-poetry:v0.2.0 \
+  --tag carsongee/drone-poetry:stable \
+  --push \
   .
+
+for python_version in ${python_versions[@]}; do
+    docker buildx build \
+      --platform linux/amd64,linux/arm64 \
+      --label org.label-schema.build-date=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+      --label org.label-schema.vcs-ref=$(git rev-parse --short HEAD) \
+      --build-arg PYTHON_VERSION="$python_version" \
+      --tag "carsongee/drone-poetry:${python_version}" \
+      --push \
+      .
+done
