@@ -11,6 +11,8 @@ ENV PYTHONUNBUFFERED=1 \
     POETRY_HOME=/opt/poetry \
     PATH="$PATH:/opt/poetry/bin"
 
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 RUN echo '#!/usr/bin/env sh\n\nexport PATH="${PATH}:/opt/poetry/bin"' > /etc/profile.d/poetry.sh
